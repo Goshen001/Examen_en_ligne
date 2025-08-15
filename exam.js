@@ -1,26 +1,37 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Questions de l'examen
+document.addEventListener('DOMContentLoaded', function () {
     const questions = [
         { label: "1. Quelle est la capitale de la France ?", name: "question1" },
         { label: "2. 2 + 2 = ?", name: "question2" },
-        { label: "3. Quelle est la couleur du ciel par temps clair ?", name: "question3" }
+        { label: "3. Quelle est la couleur du ciel par temps clair ?", name: "question3" },
+        { label: "4. Quelle est la capitale de l'Espagne ?", name: "question4" },
+        { label: "5. 3 + 5 = ?", name: "question5" },
+        { label: "6. Quelle est la couleur de l'herbe ?", name: "question6" }
     ];
-    const timers = [30, 30, 30]; // secondes par question
+
+    const timers = [30, 30, 30, 30, 30, 30]; // 30s par question
     let currentStep = 0;
     let timerInterval;
     let answers = {};
-    let userName = localStorage.getItem('user_name') || '';
-    let userEmail = localStorage.getItem('user_email') || '';
 
-    // Initialisation EmailJS
+    const userName = localStorage.getItem('user_name') || '';
+    const userEmail = localStorage.getItem('user_email') || '';
+
     emailjs.init("28zek8TTk_3Xtue1u");
 
-    // Générer le formulaire des questions
     const examForm = document.getElementById('exam-form');
+    const sendExamBtn = document.getElementById('send-exam-btn');
+    const finalStepDiv = document.getElementById('final-step');
+
+    if (!examForm || !sendExamBtn || !finalStepDiv) {
+        console.error("Un ou plusieurs éléments du DOM sont manquants.");
+        return;
+    }
+
     questions.forEach((q, idx) => {
         const div = document.createElement('div');
         div.className = 'question-step';
         div.id = 'step-' + idx;
+        div.style.display = 'none';
         div.innerHTML = `
             <div class="form-group">
                 <label for="${q.name}">${q.label}</label>
@@ -33,21 +44,23 @@ document.addEventListener('DOMContentLoaded', function() {
         examForm.appendChild(div);
     });
 
-    // Exposer les fonctions pour les boutons
-    window.submitAnswer = function(step) {
-        let input = document.getElementById(questions[step].name);
-        answers[questions[step].name] = input.value;
+    window.submitAnswer = function (step) {
+        const input = document.getElementById(questions[step].name);
+        if (input) {
+            answers[questions[step].name] = input.value.trim();
+        }
         nextStep();
-    }
-    window.skipStep = function(step) {
+    };
+
+    window.skipStep = function (step) {
         answers[questions[step].name] = "";
         nextStep();
-    }
+    };
 
     function showStep(step) {
         clearInterval(timerInterval);
         document.querySelectorAll('.question-step').forEach((el, idx) => {
-            el.classList.toggle('active', idx === step);
+            el.style.display = idx === step ? 'block' : 'none';
         });
         if (step < questions.length) {
             startTimer(step);
@@ -56,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function startTimer(step) {
         let timeLeft = timers[step];
-        let timerDisplay = document.getElementById('timer-' + step);
+        const timerDisplay = document.getElementById('timer-' + step);
         timerDisplay.textContent = timeLeft + "s";
         timerInterval = setInterval(() => {
             timeLeft--;
@@ -73,35 +86,37 @@ document.addEventListener('DOMContentLoaded', function() {
             currentStep++;
             showStep(currentStep);
         } else {
+            clearInterval(timerInterval);
             examForm.style.display = 'none';
-            document.getElementById('final-step').style.display = 'block';
+            finalStepDiv.style.display = 'block';
         }
     }
 
-    // Envoi EmailJS
-    document.getElementById('send-exam-btn').onclick = function() {
-        // Préparer les données à envoyer
+    sendExamBtn.onclick = function () {
         const templateParams = {
             user_name: userName,
             user_email: userEmail,
             question1: answers.question1 || "",
             question2: answers.question2 || "",
-            question3: answers.question3 || ""
+            question3: answers.question3 || "",
+            question4: answers.question4 || "",
+            question5: answers.question5 || "",
+            question6: answers.question6 || ""
         };
+
         emailjs.send('service_hoahirm', 'template_1b4k9hq', templateParams)
-            .then(function() {
-                alert('Examen envoyé avec succès !');
+            .then(() => {
                 document.body.innerHTML = `
-    <div class="container mt-5 text-center">
-        <h2>Merci !</h2>
-        <p>Votre examen a bien été envoyé.<br>Vous pouvez fermer cette page.</p>
-    </div>
-`;
-            }, function(error) {
+                    <div class="container mt-5 text-center">
+                        <h2>Merci !</h2>
+                        <p>Votre examen a bien été envoyé.<br>Vous pouvez fermer cette page.</p>
+                    </div>
+                `;
+            })
+            .catch(error => {
                 alert('Erreur lors de l\'envoi : ' + JSON.stringify(error));
             });
     };
 
-    // Démarrer à la première question
     showStep(0);
 });
