@@ -8,23 +8,73 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="exam.js"></script>
     <style>
+        body {
+            background: linear-gradient(135deg, #e0e7ff 0%, #fff 100%);
+            min-height: 100vh;
+        }
+        .exam-card {
+            max-width: 600px;
+            margin: 60px auto;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            border-radius: 18px;
+            background: rgba(255,255,255,0.95);
+            padding: 2.5rem 2rem;
+            transition: box-shadow 0.3s;
+        }
+        .exam-card:hover {
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.22);
+        }
+        h2 {
+            color: #3b82f6;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .timer {
+            font-weight: bold;
+            color: #d9534f;
+            font-size: 1.2rem;
+            text-align: right;
+        }
+        .btn-primary, .btn-success {
+            background: linear-gradient(90deg, #3b82f6 60%, #6366f1 100%);
+            border: none;
+            font-size: 1.1rem;
+            padding: 0.6rem 2rem;
+            border-radius: 30px;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover, .btn-success:hover {
+            background: linear-gradient(90deg, #6366f1 60%, #3b82f6 100%);
+        }
         .question-step { display: none; }
         .question-step.active { display: block; }
-        .timer { font-weight: bold; color: #d9534f; }
+        @media (max-width: 576px) {
+            .exam-card {
+                margin: 30px 10px;
+                padding: 1.5rem 0.8rem;
+            }
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="exam-card">
         <h2>Examen</h2>
+        <div class="timer" id="timer-display">00:00</div>
+
         <form id="exam-form">
             <!-- Les questions seront injectées par JS -->
         </form>
+
         <form id="final-step" style="display:none;">
-            <div class="alert alert-info">
+            <div class="alert alert-info mt-3">
                 Merci d'avoir terminé l'examen.<br>
-                Cliquez sur "Envoyer l'examen" pour soumettre vos réponses.
+                Cliquez sur <strong>"Envoyer l'examen"</strong> pour soumettre vos réponses.
             </div>
-            <button type="button" class="btn btn-success" id="send-exam-btn">Envoyer l'examen</button>
+            <button type="button" class="btn btn-success shadow" id="send-exam-btn">Envoyer l'examen</button>
         </form>
     </div>
 </body>
