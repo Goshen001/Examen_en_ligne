@@ -13,21 +13,25 @@ document.addEventListener('DOMContentLoaded', function () {
     let timerInterval;
     let answers = {};
 
-    const userName = localStorage.getItem('user_name') || '';
-    const userEmail = localStorage.getItem('user_email') || '';
-    const userEntreprise = localStorage.getItem('user_entreprise') || '';
+    // ✅ Récupération correcte des données utilisateur depuis localStorage
+    const flgUser = JSON.parse(localStorage.getItem('flg_user') || '{}');
+    const userName = flgUser.fullname || '';
+    const userEmail = flgUser.email || '';
+    const userEntreprise = flgUser.school || '';
 
-    emailjs.init("28zek8TTk_3Xtue1u");
+    emailjs.init("28zek8TTk_3Xtue1u"); // Remplace par ton vrai User ID EmailJS si besoin
 
     const examForm = document.getElementById('exam-form');
     const sendExamBtn = document.getElementById('send-exam-btn');
     const finalStepDiv = document.getElementById('final-step');
 
+    // Sécurité : vérifier les éléments du DOM
     if (!examForm || !sendExamBtn || !finalStepDiv) {
         console.error("Un ou plusieurs éléments du DOM sont manquants.");
         return;
     }
 
+    // Injecte les questions dans le DOM
     questions.forEach((q, idx) => {
         const div = document.createElement('div');
         div.className = 'question-step';
@@ -45,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
         examForm.appendChild(div);
     });
 
+    // Valider une réponse
     window.submitAnswer = function (step) {
         const input = document.getElementById(questions[step].name);
         if (input) {
@@ -53,11 +58,13 @@ document.addEventListener('DOMContentLoaded', function () {
         nextStep();
     };
 
+    // Passer une question
     window.skipStep = function (step) {
         answers[questions[step].name] = "";
         nextStep();
     };
 
+    // Affiche une étape donnée
     function showStep(step) {
         clearInterval(timerInterval);
         document.querySelectorAll('.question-step').forEach((el, idx) => {
@@ -68,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Lance le timer pour une question
     function startTimer(step) {
         let timeLeft = timers[step];
         const timerDisplay = document.getElementById('timer-' + step);
@@ -82,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1000);
     }
 
+    // Passe à la question suivante
     function nextStep() {
         if (currentStep < questions.length - 1) {
             currentStep++;
@@ -93,10 +102,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Envoi via EmailJS
     sendExamBtn.onclick = function () {
         const templateParams = {
             user_name: userName,
             user_email: userEmail,
+            user_entreprise: userEntreprise,
             question1: answers.question1 || "",
             question2: answers.question2 || "",
             question3: answers.question3 || "",
@@ -119,5 +130,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     };
 
+    // Démarrer avec la première question
     showStep(0);
 });
