@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Examen - Questions</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="exam.js"></script>
+    <style>
+        .question-step { display: none; }
+        .question-step.active { display: block; }
+        .timer { font-weight: bold; color: #d9534f; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Examen</h2>
+        <form id="exam-form">
+            <!-- Les questions seront injectées par JS -->
+        </form>
+        <form id="final-step" style="display:none;">
+            <div class="alert alert-info">
+                Merci d'avoir terminé l'examen.<br>
+                Cliquez sur "Envoyer l'examen" pour soumettre vos réponses.
+            </div>
+            <button type="button" class="btn btn-success" id="send-exam-btn">Envoyer l'examen</button>
+        </form>
+    </div>
+</body>
+</html>
