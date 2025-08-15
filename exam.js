@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const userName = localStorage.getItem('user_name') || '';
     const userEmail = localStorage.getItem('user_email') || '';
+    const userEntreprise = localStorage.getItem('user_entreprise') || '';
 
     emailjs.init("28zek8TTk_3Xtue1u");
 
