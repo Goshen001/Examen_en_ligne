@@ -3,30 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <title>Enregistrement - Examen en ligne</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+
+    <!-- Styles identiques à la page d'accueil -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0e7ff 0%, #fff 100%);
+            min-height: 100vh;
+        }
+        .register-card {
+            max-width: 450px;
+            margin: 60px auto;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            border-radius: 18px;
+            background: rgba(255,255,255,0.95);
+            padding: 2.5rem 2rem;
+        }
+        h2 {
+            color: #3b82f6;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .btn-success {
+            background: linear-gradient(90deg, #3b82f6 60%, #6366f1 100%);
+            border: none;
+            font-size: 1.1rem;
+            padding: 0.6rem 2rem;
+            border-radius: 30px;
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .btn-success:hover {
+            background: linear-gradient(90deg, #6366f1 60%, #3b82f6 100%);
+        }
+        @media (max-width: 576px) {
+            .register-card {
+                margin: 30px 10px;
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
+
+    <div class="register-card">
         <h2>Enregistrement</h2>
         <form id="register-form">
             <div class="form-group">
-                <label for="name">Nom</label>
-                <input type="text" class="form-control" id="name" required>
+                <label for="fullname">Nom complet</label>
+                <input type="text" class="form-control" id="fullname" required>
             </div>
             <div class="form-group">
                 <label for="email">Adresse Email</label>
                 <input type="email" class="form-control" id="email" required>
             </div>
+            <div class="form-group">
+                <label for="school">Entreprise</label>
+                <input type="text" class="form-control" id="school" required>
+            </div>
             <button type="submit" class="btn btn-success">Continuer</button>
         </form>
     </div>
+
     <script>
         document.getElementById('register-form').onsubmit = function(e) {
             e.preventDefault();
-            localStorage.setItem('user_name', document.getElementById('name').value);
-            localStorage.setItem('user_email', document.getElementById('email').value);
+
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const school = document.getElementById('school').value;
+
+            localStorage.setItem('flg_user', JSON.stringify({ fullname, email, school }));
             window.location.href = "rules.html";
-        }
+        };
     </script>
+
 </body>
 </html>
